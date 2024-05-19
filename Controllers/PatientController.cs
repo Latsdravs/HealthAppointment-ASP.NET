@@ -77,7 +77,7 @@ namespace TheApp.Controllers
 
         [Authorize]
         [HttpPatch]
-        [Route("CancelAppointment")]
+        [Route("CancelAppointment/{AppointmentId}")]
         public Response<string> CancelAppointment(int AppointmentId)
         {
             Response<string> response;

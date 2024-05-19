@@ -477,11 +477,58 @@ namespace TheApp.Models
             }
             return response;
         }
-        
-        
 
 
 
+
+        //
+        public Response<List<Patient>> GetPatient(SqlConnection connection)
+        {
+            Response<List<Patient>> response = new Response<List<Patient>>();
+            try
+            {
+                SqlDataAdapter da = new SqlDataAdapter("PatientGet", connection);
+                da.SelectCommand.CommandType = CommandType.StoredProcedure;
+                da.SelectCommand.Parameters.Add("@ErrorMessage", System.Data.SqlDbType.Char, 200);
+                da.SelectCommand.Parameters["@ErrorMessage"].Direction = System.Data.ParameterDirection.Output;
+                DataTable dt = new DataTable();
+                da.Fill(dt);
+                string message = (string)da.SelectCommand.Parameters["@ErrorMessage"].Value;
+                List<Patient> list = new List<Patient>();
+                if (dt.Rows.Count > 0)
+                {
+                    for (int i = 0; i < dt.Rows.Count; i++)
+                    {
+                        Patient item = new Patient();
+                        item.Id = Convert.ToInt32(dt.Rows[0]["Id"]);
+                        item.FirstName = Convert.ToString(dt.Rows[0]["FirstName"]);
+                        item.LastName = Convert.ToString(dt.Rows[0]["LastName"]);
+                        item.Gender = Convert.ToInt32(dt.Rows[0]["Gender"]);
+                        item.BirthDay = Convert.ToDateTime(dt.Rows[0]["Birth"]);
+                        item.Info = new Info();
+                        item.Info.Address = Convert.ToString(dt.Rows[0]["Address"]);
+                        item.Info.Phone = Convert.ToString(dt.Rows[0]["Phone"]);
+                        list.Add(item);
+                    }
+
+                    response.Data = list;
+                    response.StatusCode = 200;
+                    response.StatusMessage = message;
+                }
+                else
+                {
+                    response.StatusCode = 100;
+                    response.StatusMessage = message;
+                }
+
+            }
+            catch (Exception ex)
+            {
+                response.StatusCode = 100;
+                response.StatusMessage = ex.Message;
+            }
+            return response;
+        }
         public Response<string> DeletePatientById(int PatientId, SqlConnection connection)
         {
             Response<string> response = new Response<string>();
@@ -533,7 +580,7 @@ namespace TheApp.Models
                 Patient patient = new Patient();
                 if (dt.Rows.Count > 0)
                 {
-                    patient.Id = Convert.ToInt32(dt.Rows[0]["Id"]);
+                    patient.Id = -1;
                     patient.FirstName = Convert.ToString(dt.Rows[0]["FirstName"]);
                     patient.LastName = Convert.ToString(dt.Rows[0]["LastName"]);
                     patient.Gender = Convert.ToInt32(dt.Rows[0]["Gender"]);
@@ -550,6 +597,51 @@ namespace TheApp.Models
                     response.StatusCode = 100;
                     response.StatusMessage = message;
                 }
+            }
+            catch (Exception ex)
+            {
+                response.StatusCode = 100;
+                response.StatusMessage = ex.Message;
+            }
+            return response;
+        }
+        public Response<List<Doctor>> GetDoctor(SqlConnection connection)
+        {
+            Response<List<Doctor>> response = new Response<List<Doctor>>();
+            try
+            {
+                SqlDataAdapter da = new SqlDataAdapter("DoctorGet", connection);
+                da.SelectCommand.CommandType = CommandType.StoredProcedure;
+                da.SelectCommand.Parameters.Add("@ErrorMessage", System.Data.SqlDbType.Char, 200);
+                da.SelectCommand.Parameters["@ErrorMessage"].Direction = System.Data.ParameterDirection.Output;
+                DataTable dt = new DataTable();
+                da.Fill(dt);
+                string message = (string)da.SelectCommand.Parameters["@ErrorMessage"].Value;
+                List<Doctor> list = new List<Doctor>();
+                if (dt.Rows.Count > 0)
+                {
+                    for (int i = 0; i < dt.Rows.Count; i++)
+                    {
+                        Doctor item = new Doctor();
+                        item.Id = Convert.ToInt32(dt.Rows[0]["Id"]);
+                        item.FirstName = Convert.ToString(dt.Rows[0]["FirstName"]);
+                        item.LastName = Convert.ToString(dt.Rows[0]["LastName"]);
+                        item.Clinic = new Clinic();
+                        item.Clinic.Hospital = Convert.ToString(dt.Rows[0]["Hospital"]);
+                        item.Clinic.Speciality = Convert.ToString(dt.Rows[0]["Speciality"]);
+                        list.Add(item);
+                    }
+
+                    response.Data = list;
+                    response.StatusCode = 200;
+                    response.StatusMessage = message;
+                }
+                else
+                {
+                    response.StatusCode = 100;
+                    response.StatusMessage = message;
+                }
+
             }
             catch (Exception ex)
             {
@@ -633,6 +725,8 @@ namespace TheApp.Models
             }
             return response;
         }
+
+        
 
         public Response<string> PostAppointment(DateTime AppointmentDateTime, int DoctorId, SqlConnection connection)
         {

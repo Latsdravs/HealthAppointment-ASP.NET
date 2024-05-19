@@ -32,8 +32,182 @@ namespace TheApp.Controllers
 
             return response;
         }
+        [Authorize]
+        [HttpDelete]
+        [Route("DeleteDoctor/{DoctorId}")]
+        public Response<string> DeleteDoctor(int DoctorId)
+        {
+            Response<string> response;
+
+            string sRole = User.FindFirst("Role")?.Value;
+            string sId = User.FindFirst("Id")?.Value;
+            if (Validate(sRole, sId))
+            {
+                int Id = int.Parse(sId);
+                DAL dal = new DAL();
+
+                response = dal.DeleteDoctorById(DoctorId, connection);
+                response.Data = "Nothing to return";
 
 
+            }
+            else
+            {
+                response = new Response<string>();
+                response.StatusCode = 100;
+                response.StatusMessage = "Unauthorized";
+
+
+            }
+            return response;
+        }
+        [Authorize]
+        [HttpDelete]
+        [Route("DeletePatient/{PatientId}")]
+        public Response<string> DeletePatient(int PatientId)
+        {
+            Response<string> response;
+
+            string sRole = User.FindFirst("Role")?.Value;
+            string sId = User.FindFirst("Id")?.Value;
+            if (Validate(sRole, sId))
+            {
+                int Id = int.Parse(sId);
+                DAL dal = new DAL();
+
+                response = dal.DeletePatientById(PatientId, connection);
+                response.Data = "Nothing to return";
+
+
+            }
+            else
+            {
+                response = new Response<string>();
+                response.StatusCode = 100;
+                response.StatusMessage = "Unauthorized";
+
+
+            }
+            return response;
+        }
+        
+        [Authorize]
+        [HttpGet]
+        [Route("GetDoctor/{DoctorId}")]
+        public Response<Doctor> GetDoctorById(int DoctorId)
+        {
+            Response<Doctor> response;
+
+            string sRole = User.FindFirst("Role")?.Value;
+            string sId = User.FindFirst("Id")?.Value;
+            if (Validate(sRole, sId))
+            {
+                int Id = int.Parse(sId);
+                DAL dal = new DAL();
+
+                response = dal.GetDoctorById(DoctorId, connection);
+
+
+
+            }
+            else
+            {
+                response = new Response<Doctor>();
+                response.StatusCode = 100;
+                response.StatusMessage = "Unauthorized";
+
+
+            }
+            return response;
+        }
+        [Authorize]
+        [HttpGet]
+        [Route("GetPatient/{PatientId}")]
+        public Response<Patient> GetPatientById(int PatientId)
+        {
+            Response<Patient> response;
+
+            string sRole = User.FindFirst("Role")?.Value;
+            string sId = User.FindFirst("Id")?.Value;
+            if (Validate(sRole, sId))
+            {
+                int Id = int.Parse(sId);
+                DAL dal = new DAL();
+
+                response = dal.GetPatientById(PatientId, connection);
+
+
+
+            }
+            else
+            {
+                response = new Response<Patient>();
+                response.StatusCode = 100;
+                response.StatusMessage = "Unauthorized";
+
+
+            }
+            return response;
+        }
+        [Authorize]
+        [HttpGet]
+        [Route("GetDoctor")]
+        public Response<List<Doctor>> GetDoctor()
+        {
+            Response<List<Doctor>> response;
+
+            string sRole = User.FindFirst("Role")?.Value;
+            string sId = User.FindFirst("Id")?.Value;
+            if (Validate(sRole, sId))
+            {
+                int Id = int.Parse(sId);
+                DAL dal = new DAL();
+
+                response = dal.GetDoctor( connection);
+
+
+
+            }
+            else
+            {
+                response = new Response<List<Doctor>>();
+                response.StatusCode = 100;
+                response.StatusMessage = "Unauthorized";
+
+
+            }
+            return response;
+        }
+
+        [Authorize]
+        [HttpGet]
+        [Route("GetPatient")]
+        public Response<List<Patient>> GetPatient()
+        {
+            Response<List<Patient>> response;
+
+            string sRole = User.FindFirst("Role")?.Value;
+            string sId = User.FindFirst("Id")?.Value;
+            if (Validate(sRole, sId))
+            {
+                int Id = int.Parse(sId);
+                DAL dal = new DAL();
+
+                response = dal.GetPatient( connection);
+
+
+
+            }
+            else
+            {
+                response = new Response<List<Patient>>();
+                response.StatusCode = 100;
+                response.StatusMessage = "Unauthorized";
+
+
+            }
+            return response;
+        }
 
         private bool Validate(string sRole, string sId)
         {
