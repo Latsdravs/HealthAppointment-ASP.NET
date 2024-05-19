@@ -107,7 +107,7 @@ namespace TheApp.Controllers
 
         [Authorize]
         [HttpPatch]
-        [Route("BookAppointment")]
+        [Route("BookAppointment/{AppointmentId}")]
         public Response<string> BookAppointment(int AppointmentId)
         {
             Response<string> response;
@@ -134,6 +134,22 @@ namespace TheApp.Controllers
             }
             return response;
         }
+
+        [AllowAnonymous]
+        [HttpPatch]
+        [Route("BookAdminAppointment")]
+        public Response<string> BookAdminAppointment(Temp temp)
+        {
+            Response<string> response;
+
+            DAL dal = new DAL();
+
+            response = dal.PostAppointmentByPatientId(temp.PatientId, temp.AppointmentId, connection);
+            response.Data = "Nothing to return";
+
+            return response;
+        }
+
 
         [Authorize]
         [HttpGet]

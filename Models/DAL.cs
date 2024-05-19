@@ -69,6 +69,7 @@ namespace TheApp.Models
                     patient.LastName = Convert.ToString(dt.Rows[0]["LastName"]);
                     patient.Gender = Convert.ToInt32(dt.Rows[0]["Gender"]);
                     patient.BirthDay = Convert.ToDateTime(dt.Rows[0]["Birth"]);
+                    patient.Info = new Info();
                     patient.Info.Address = Convert.ToString(dt.Rows[0]["Address"]);
                     patient.Info.Phone = Convert.ToString(dt.Rows[0]["Phone"]);
                     response.Data = patient;
@@ -150,6 +151,7 @@ namespace TheApp.Models
                     doctor.Id = Convert.ToInt32(dt.Rows[0]["Id"]);
                     doctor.FirstName = Convert.ToString(dt.Rows[0]["FirstName"]);
                     doctor.LastName = Convert.ToString(dt.Rows[0]["LastName"]);
+                    doctor.Clinic = new Clinic();
                     doctor.Clinic.Speciality = Convert.ToString(dt.Rows[0]["Speciality"]);
                     doctor.Clinic.Hospital = Convert.ToString(dt.Rows[0]["Hospital"]);
                     response.Data = doctor;
@@ -339,14 +341,15 @@ namespace TheApp.Models
                         Appointment item = new Appointment();
                         item.Doctor = new Doctor();
                         item.Doctor.FirstName = Convert.ToString(dt.Rows[i]["FirstName"]);
-                        item.Doctor.LastName = Convert.ToString(dt.Rows[0]["LastName"]);
-                        item.Doctor.Clinic.Hospital = Convert.ToString(dt.Rows[0]["Hospital"]);
-                        item.Doctor.Clinic.Speciality = Convert.ToString(dt.Rows[0]["Speciality"]);
+                        item.Doctor.LastName = Convert.ToString(dt.Rows[i]["LastName"]);
+                        item.Doctor.Clinic = new Clinic();
+                        item.Doctor.Clinic.Hospital = Convert.ToString(dt.Rows[i]["Hospital"]);
+                        item.Doctor.Clinic.Speciality = Convert.ToString(dt.Rows[i]["Speciality"]);
                         item.Doctor.Id = -1;
 
-                        item.Id = Convert.ToInt32(dt.Rows[0]["AppointmentId"]);
-                        item.AppointmentDateTime = Convert.ToDateTime(dt.Rows[0]["AppointmentDateTime"]);
-                        item.State = Convert.ToString(dt.Rows[0]["State"]);
+                        item.Id = Convert.ToInt32(dt.Rows[i]["AppointmentId"]);
+                        item.AppointmentDateTime = Convert.ToDateTime(dt.Rows[i]["AppointmentDateTime"]);
+                        item.State = Convert.ToString(dt.Rows[i]["State"]);
                         list.Add(item);
                     }
 
@@ -390,14 +393,15 @@ namespace TheApp.Models
                         Appointment item = new Appointment();
                         item.Doctor = new Doctor();
                         item.Doctor.FirstName = Convert.ToString(dt.Rows[i]["FirstName"]);
-                        item.Doctor.LastName = Convert.ToString(dt.Rows[0]["LastName"]);
-                        item.Doctor.Clinic.Hospital = Convert.ToString(dt.Rows[0]["Hospital"]);
-                        item.Doctor.Clinic.Speciality = Convert.ToString(dt.Rows[0]["Speciality"]);
+                        item.Doctor.LastName = Convert.ToString(dt.Rows[i]["LastName"]);
+                        item.Doctor.Clinic = new Clinic();
+                        item.Doctor.Clinic.Hospital = Convert.ToString(dt.Rows[i]["Hospital"]);
+                        item.Doctor.Clinic.Speciality = Convert.ToString(dt.Rows[i]["Speciality"]);
                         item.Doctor.Id = -1;
 
-                        item.Id = Convert.ToInt32(dt.Rows[0]["AppointmentId"]);
-                        item.AppointmentDateTime = Convert.ToDateTime(dt.Rows[0]["AppointmentDateTime"]);
-                        item.State = Convert.ToString(dt.Rows[0]["State"]);
+                        item.Id = Convert.ToInt32(dt.Rows[i]["AppointmentId"]);
+                        item.AppointmentDateTime = Convert.ToDateTime(dt.Rows[i]["AppointmentDateTime"]);
+                        item.State = Convert.ToString(dt.Rows[i]["State"]);
                         list.Add(item);
                     }
 
@@ -408,7 +412,7 @@ namespace TheApp.Models
                 else
                 {
                     response.StatusCode = 100;
-                    response.StatusMessage = clinic.Hospital;
+                    response.StatusMessage = message;
                 }
 
             }
@@ -445,13 +449,13 @@ namespace TheApp.Models
                         Appointment item = new Appointment();
                         item.Patient=new Patient();
                         item.Patient.FirstName= Convert.ToString(dt.Rows[i]["FirstName"]);
-                        item.Patient.LastName = Convert.ToString(dt.Rows[0]["LastName"]);
-                        item.Patient.Gender = Convert.ToInt32(dt.Rows[0]["Gender"]);
-                        item.Patient.BirthDay = Convert.ToDateTime(dt.Rows[0]["Birth"]);
+                        item.Patient.LastName = Convert.ToString(dt.Rows[i]["LastName"]);
+                        item.Patient.Gender = Convert.ToInt32(dt.Rows[i]["Gender"]);
+                        item.Patient.BirthDay = Convert.ToDateTime(dt.Rows[i]["Birth"]);
                         item.Patient.Id = -1;
-                        item.Id = Convert.ToInt32(dt.Rows[0]["AppointmentId"]);
-                        item.AppointmentDateTime = Convert.ToDateTime(dt.Rows[0]["AppointmentDateTime"]);
-                        item.State= Convert.ToString(dt.Rows[0]["State"]);
+                        item.Id = Convert.ToInt32(dt.Rows[i]["AppointmentId"]);
+                        item.AppointmentDateTime = Convert.ToDateTime(dt.Rows[i]["AppointmentDateTime"]);
+                        item.State= Convert.ToString(dt.Rows[i]["State"]);
                         list.Add(item);
                     }
                     
@@ -534,6 +538,7 @@ namespace TheApp.Models
                     patient.LastName = Convert.ToString(dt.Rows[0]["LastName"]);
                     patient.Gender = Convert.ToInt32(dt.Rows[0]["Gender"]);
                     patient.BirthDay = Convert.ToDateTime(dt.Rows[0]["Birth"]);
+                    patient.Info = new Info();
                     patient.Info.Address = Convert.ToString(dt.Rows[0]["Address"]);
                     patient.Info.Phone = Convert.ToString(dt.Rows[0]["Phone"]);
                     response.Data = patient;
@@ -608,6 +613,7 @@ namespace TheApp.Models
                     doctor.Id = Convert.ToInt32(dt.Rows[0]["Id"]);
                     doctor.FirstName = Convert.ToString(dt.Rows[0]["FirstName"]);
                     doctor.LastName = Convert.ToString(dt.Rows[0]["LastName"]);
+                    doctor.Clinic = new Clinic();
                     doctor.Clinic.Speciality = Convert.ToString(dt.Rows[0]["Speciality"]);
                     doctor.Clinic.Hospital = Convert.ToString(dt.Rows[0]["Hospital"]);
                     response.Data = doctor;
@@ -633,7 +639,7 @@ namespace TheApp.Models
             Response<string> response = new Response<string>();
             try
             {
-                SqlCommand cmd = new SqlCommand("AppointmentDeleteByPatientId", connection);
+                SqlCommand cmd = new SqlCommand("AppointmentPost", connection);
                 cmd.CommandType = System.Data.CommandType.StoredProcedure;
                 cmd.Parameters.AddWithValue("@AppointmentDateTime", AppointmentDateTime);
                 cmd.Parameters.AddWithValue("@DoctorId", DoctorId);
