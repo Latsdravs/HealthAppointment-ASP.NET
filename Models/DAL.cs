@@ -447,15 +447,20 @@ namespace TheApp.Models
                     for (int i = 0; i < dt.Rows.Count; i++)
                     {
                         Appointment item = new Appointment();
-                        item.Patient=new Patient();
-                        item.Patient.FirstName= Convert.ToString(dt.Rows[i]["FirstName"]);
-                        item.Patient.LastName = Convert.ToString(dt.Rows[i]["LastName"]);
-                        item.Patient.Gender = Convert.ToInt32(dt.Rows[i]["Gender"]);
-                        item.Patient.BirthDay = Convert.ToDateTime(dt.Rows[i]["Birth"]);
-                        item.Patient.Id = -1;
                         item.Id = Convert.ToInt32(dt.Rows[i]["AppointmentId"]);
                         item.AppointmentDateTime = Convert.ToDateTime(dt.Rows[i]["AppointmentDateTime"]);
-                        item.State= Convert.ToString(dt.Rows[i]["State"]);
+                        item.State = Convert.ToString(dt.Rows[i]["State"]);
+                        if (item.State == "Unavailable")
+                        {
+                            item.Patient = new Patient();
+                            item.Patient.FirstName = Convert.ToString(dt.Rows[i]["FirstName"]);
+                            item.Patient.LastName = Convert.ToString(dt.Rows[i]["LastName"]);
+                            item.Patient.Gender = Convert.ToInt32(dt.Rows[i]["Gender"]);
+                            item.Patient.BirthDay = Convert.ToDateTime(dt.Rows[i]["Birth"]);
+                            item.Patient.Id = -1;
+                        }
+                        
+                        
                         list.Add(item);
                     }
                     
@@ -605,6 +610,7 @@ namespace TheApp.Models
             }
             return response;
         }
+
         public Response<List<Doctor>> GetDoctor(SqlConnection connection)
         {
             Response<List<Doctor>> response = new Response<List<Doctor>>();
@@ -650,7 +656,6 @@ namespace TheApp.Models
             }
             return response;
         }
-
         public Response<string> DeleteDoctorById(int DoctorId, SqlConnection connection)
         {
             Response<string> response = new Response<string>();

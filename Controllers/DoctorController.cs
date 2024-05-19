@@ -34,8 +34,6 @@ namespace TheApp.Controllers
 
                 response = dal.GetAppointmentByDoctorId(Id, connection);
 
-
-
             }
             else
             {

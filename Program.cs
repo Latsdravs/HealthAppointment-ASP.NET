@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Http.Features;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 
@@ -19,7 +20,10 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     });
 
 // Add services to the container.
-
+builder.Services.Configure<FormOptions>(o =>
+{
+    o.MultipartBodyLengthLimit = 268435456; // 256 MB limit
+});
 builder.Services.AddControllers().AddJsonOptions(options =>
 {
     options.JsonSerializerOptions.DefaultIgnoreCondition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull;
@@ -40,6 +44,10 @@ builder.Services.AddCors(options =>
 
 
 var app = builder.Build();
+if (!Directory.Exists(Path.Combine(Directory.GetCurrentDirectory(), "uploads")))
+{
+    Directory.CreateDirectory(Path.Combine(Directory.GetCurrentDirectory(), "uploads"));
+}
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
