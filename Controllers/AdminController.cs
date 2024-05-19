@@ -33,6 +33,64 @@ namespace TheApp.Controllers
             return response;
         }
         [Authorize]
+        [HttpGet]
+        [Route("DoctorAppointments/{DoctorId}")]
+        public Response<List<Appointment>> GetDoctorAppointment(int DoctorId)
+        {
+            Response<List<Appointment>> response;
+
+            string sRole = User.FindFirst("Role")?.Value;
+            string sId = User.FindFirst("Id")?.Value;
+            if (Validate(sRole, sId))
+            {
+                int Id = int.Parse(sId);
+                DAL dal = new DAL();
+
+                response = dal.GetAppointmentByDoctorId(DoctorId, connection);
+
+
+
+            }
+            else
+            {
+                response = new Response<List<Appointment>>();
+                response.StatusCode = 100;
+                response.StatusMessage = "Unauthorized";
+
+
+            }
+            return response;
+        }
+        [Authorize]
+        [HttpGet]
+        [Route("PatientAppointments/{PatientId}")]
+        public Response<List<Appointment>> GetPatientAppointments(int PatientId)
+        {
+            Response<List<Appointment>> response;
+
+            string sRole = User.FindFirst("Role")?.Value;
+            string sId = User.FindFirst("Id")?.Value;
+            if (Validate(sRole, sId))
+            {
+                int Id = int.Parse(sId);
+                DAL dal = new DAL();
+
+                response = dal.GetAppointmentByPatientId(PatientId, connection);
+
+
+
+            }
+            else
+            {
+                response = new Response<List<Appointment>>();
+                response.StatusCode = 100;
+                response.StatusMessage = "Unauthorized";
+
+
+            }
+            return response;
+        }
+        [Authorize]
         [HttpDelete]
         [Route("DeleteDoctor/{DoctorId}")]
         public Response<string> DeleteDoctor(int DoctorId)

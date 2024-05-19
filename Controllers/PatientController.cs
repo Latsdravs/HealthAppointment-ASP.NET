@@ -144,7 +144,7 @@ namespace TheApp.Controllers
 
             DAL dal = new DAL();
 
-            response = dal.PostAppointmentByPatientId(temp.PatientId, temp.AppointmentId, connection);
+            response = dal.PostAppointmentByPatientId(temp.Id, temp.AppointmentId, connection);
             response.Data = "Nothing to return";
 
             return response;
