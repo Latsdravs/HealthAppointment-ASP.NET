@@ -519,7 +519,7 @@ namespace TheApp.Models
                 else
                 {
                     response.StatusCode = 100;
-                    response.StatusMessage = message;
+                    response.StatusMessage = message + "olmadı";
                 }
 
             }
