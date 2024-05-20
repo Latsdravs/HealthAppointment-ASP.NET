@@ -110,6 +110,7 @@ namespace TheApp.Controllers
                 int Id = wrap.Data;
                 response.StatusCode = wrap.StatusCode;
                 response.StatusMessage = wrap.StatusMessage;
+                response.Data = "Acayip";
                 if (wrap.StatusCode == 100) return response;
 
 
