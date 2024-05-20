@@ -211,6 +211,69 @@ namespace TheApp.Controllers
             return response;
         }
 
+        [Authorize]
+        [HttpGet]
+        [Route("MyRecords")]
+        public Response<List<string>> GetMyRecords()
+        {
+            Response<List<string>> response;
+
+            string sRole = User.FindFirst("Role")?.Value;
+            string sId = User.FindFirst("Id")?.Value;
+            if (Validate(sRole, sId))
+            {
+                int Id = int.Parse(sId);
+                DAL dal = new DAL();
+
+                response = dal.GetRecordNameByPatientId(Id, connection);
+
+
+
+
+            }
+            else
+            {
+                response = new Response<List<string>>();
+                response.StatusCode = 100;
+                response.StatusMessage = "Unauthorized";
+
+
+            }
+            return response;
+        }
+
+        [Authorize]
+        [HttpPost]
+        [Route("GetRecord")]
+        public Response<List<Appointment>> SearchAppointment(Clinic clinic)
+        {
+            Response<List<Appointment>> response;
+
+            string sRole = User.FindFirst("Role")?.Value;
+            string sId = User.FindFirst("Id")?.Value;
+            if (Validate(sRole, sId))
+            {
+
+                DAL dal = new DAL();
+
+                response = dal.GetAppointmentBySearch(clinic, connection);
+
+
+
+            }
+            else
+            {
+                response = new Response<List<Appointment>>();
+                response.StatusCode = 100;
+                response.StatusMessage = "Unauthorized";
+
+
+            }
+            return response;
+        }
+
+
+
 
         private bool Validate(string sRole,string sId)
         {
