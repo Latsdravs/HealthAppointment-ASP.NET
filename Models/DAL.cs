@@ -486,6 +486,225 @@ namespace TheApp.Models
 
 
 
+        public Response<int> GetPatientIdByAppointmentId(int AppointmentId, SqlConnection connection)
+        {
+            Response<int> response = new Response<int>();
+            try
+            {
+                SqlCommand cmd = new SqlCommand("PatientIdGetByAppointmentId", connection);
+                cmd.CommandType = System.Data.CommandType.StoredProcedure;
+                cmd.Parameters.AddWithValue("@AppointmentId", AppointmentId);
+                
+
+                cmd.Parameters.Add("@PatientId", System.Data.SqlDbType.Int);
+                cmd.Parameters["@PatientId"].Direction = System.Data.ParameterDirection.Output;
+
+                
+
+                cmd.Parameters.Add("@ErrorMessage", System.Data.SqlDbType.Char, 200);
+                cmd.Parameters["@ErrorMessage"].Direction = System.Data.ParameterDirection.Output;
+                connection.Open();
+                int i = cmd.ExecuteNonQuery();
+                connection.Close();
+                string message = (string)cmd.Parameters["@ErrorMessage"].Value;
+                if (i > 0)
+                {
+                    
+                    int PatientId=Convert.ToInt32(cmd.Parameters["@PatientId"].Value);
+                    response.Data = PatientId;
+                    response.StatusCode = 200;
+                    response.StatusMessage = message;
+
+                }
+                else
+                {
+                    response.StatusCode = 100;
+                    response.StatusMessage = message;
+                }
+
+            }
+            catch (Exception ex)
+            {
+                response.StatusCode = 100;
+                response.StatusMessage = ex.Message;
+            }
+            return response;
+        }
+        
+        
+        public Response<List<string>> GetRecordNameByPatientId(int PatientId, SqlConnection connection)
+        {
+            Response<List<string>> response = new Response<List<string>>();
+            try
+            {
+                SqlDataAdapter da = new SqlDataAdapter("RecordNameGetByPatientId", connection);
+                da.SelectCommand.CommandType = CommandType.StoredProcedure;
+                da.SelectCommand.Parameters.AddWithValue("@PatientId", PatientId);
+                da.SelectCommand.Parameters.Add("@ErrorMessage", System.Data.SqlDbType.Char, 200);
+                da.SelectCommand.Parameters["@ErrorMessage"].Direction = System.Data.ParameterDirection.Output;
+                DataTable dt = new DataTable();
+                da.Fill(dt);
+                string message = (string)da.SelectCommand.Parameters["@ErrorMessage"].Value;
+                List<string> list = new List<string>();
+                if (dt.Rows.Count > 0)
+                {
+
+                    for (int i = 0; i < dt.Rows.Count; i++)
+                    {
+                        string item = Convert.ToString(dt.Rows[i]["Title"]);
+
+
+
+
+                        list.Add(item);
+                    }
+
+                    response.Data = list;
+                    response.StatusCode = 200;
+                    response.StatusMessage = message;
+                }
+                else
+                {
+                    response.StatusCode = 100;
+                    response.StatusMessage = message;
+                }
+
+            }
+            catch (Exception ex)
+            {
+                response.StatusCode = 100;
+                response.StatusMessage = ex.Message;
+            }
+            return response;
+        }
+
+        public Response<Record> GetRecordByPatientIdAndTitle(int PatientId,string Title, SqlConnection connection)
+        {
+            Response<Record> response = new Response<Record>();
+            try
+            {
+                SqlCommand cmd = new SqlCommand("RecordNameGetByPatientId", connection);
+                cmd.CommandType = System.Data.CommandType.StoredProcedure;
+                cmd.Parameters.AddWithValue("@PatientId", PatientId);
+                cmd.Parameters.AddWithValue("@Title", Title);
+
+                cmd.Parameters.Add("@Path", System.Data.SqlDbType.NChar, 200);
+                cmd.Parameters["@Path"].Direction = System.Data.ParameterDirection.Output;
+
+                cmd.Parameters.Add("@Date", System.Data.SqlDbType.DateTime);
+                cmd.Parameters["@Date"].Direction = System.Data.ParameterDirection.Output;
+
+                cmd.Parameters.Add("@ErrorMessage", System.Data.SqlDbType.Char, 200);
+                cmd.Parameters["@ErrorMessage"].Direction = System.Data.ParameterDirection.Output;
+                connection.Open();
+                int i = cmd.ExecuteNonQuery();
+                connection.Close();
+                string message = (string)cmd.Parameters["@ErrorMessage"].Value;
+                if (i > 0)
+                {
+                    Record record = new Record();
+                    record.PatientId = PatientId;
+                    record.Title = Title;
+                    record.Date = Convert.ToDateTime(cmd.Parameters["@Date"].Value);
+                    record.Path = Convert.ToString(cmd.Parameters["@Path"].Value);
+                    response.Data = record;
+                    response.StatusCode = 200;
+                    response.StatusMessage = message;
+
+                }
+                else
+                {
+                    response.StatusCode = 100;
+                    response.StatusMessage = message;
+                }
+
+            }
+            catch (Exception ex)
+            {
+                response.StatusCode = 100;
+                response.StatusMessage = ex.Message;
+            }
+            return response;
+        }
+
+        public Response<string> PostRecord(Record record, SqlConnection connection)
+        {
+            Response<string> response = new Response<string>();
+            try
+            {
+                SqlCommand cmd = new SqlCommand("RecordPost", connection);
+                cmd.CommandType = System.Data.CommandType.StoredProcedure;
+                cmd.Parameters.AddWithValue("@Path", record.Path);
+                cmd.Parameters.AddWithValue("@PatientId", record.PatientId);
+                cmd.Parameters.AddWithValue("@Title", record.Title);
+
+                cmd.Parameters.Add("@ErrorMessage", System.Data.SqlDbType.Char, 200);
+                cmd.Parameters["@ErrorMessage"].Direction = System.Data.ParameterDirection.Output;
+                connection.Open();
+                int i = cmd.ExecuteNonQuery();
+                connection.Close();
+                string message = (string)cmd.Parameters["@ErrorMessage"].Value;
+                if (i > 0)
+                {
+                    response.StatusCode = 200;
+                    response.StatusMessage = message;
+
+                }
+                else
+                {
+                    response.StatusCode = 100;
+                    response.StatusMessage = message;
+                }
+            }
+            catch (Exception ex)
+            {
+                response.StatusCode = 100;
+                response.StatusMessage = ex.Message;
+            }
+            return response;
+        }
+        public Response<string> DeleteRecord(int PatientId, string Title, SqlConnection connection)
+        {
+            Response<string> response = new Response<string>();
+            try
+            {
+                SqlCommand cmd = new SqlCommand("RecordDelete", connection);
+                cmd.CommandType = System.Data.CommandType.StoredProcedure;
+                
+                cmd.Parameters.AddWithValue("@PatientId", PatientId);
+                cmd.Parameters.AddWithValue("@Title", Title);
+
+                cmd.Parameters.Add("@ErrorMessage", System.Data.SqlDbType.Char, 200);
+                cmd.Parameters["@ErrorMessage"].Direction = System.Data.ParameterDirection.Output;
+                connection.Open();
+                int i = cmd.ExecuteNonQuery();
+                connection.Close();
+                string message = (string)cmd.Parameters["@ErrorMessage"].Value;
+                if (i > 0)
+                {
+                    response.StatusCode = 200;
+                    response.StatusMessage = message;
+
+                }
+                else
+                {
+                    response.StatusCode = 100;
+                    response.StatusMessage = message;
+                }
+            }
+            catch (Exception ex)
+            {
+                response.StatusCode = 100;
+                response.StatusMessage = ex.Message;
+            }
+            return response;
+        }
+
+
+
+
+
+
         //
         public Response<List<Patient>> GetPatient(SqlConnection connection)
         {
@@ -505,14 +724,14 @@ namespace TheApp.Models
                     for (int i = 0; i < dt.Rows.Count; i++)
                     {
                         Patient item = new Patient();
-                        item.Id = Convert.ToInt32(dt.Rows[0]["Id"]);
-                        item.FirstName = Convert.ToString(dt.Rows[0]["FirstName"]);
-                        item.LastName = Convert.ToString(dt.Rows[0]["LastName"]);
-                        item.Gender = Convert.ToInt32(dt.Rows[0]["Gender"]);
-                        item.BirthDay = Convert.ToDateTime(dt.Rows[0]["Birth"]);
+                        item.Id = Convert.ToInt32(dt.Rows[i]["Id"]);
+                        item.FirstName = Convert.ToString(dt.Rows[i]["FirstName"]);
+                        item.LastName = Convert.ToString(dt.Rows[i]["LastName"]);
+                        item.Gender = Convert.ToInt32(dt.Rows[i]["Gender"]);
+                        item.BirthDay = Convert.ToDateTime(dt.Rows[i]["Birth"]);
                         item.Info = new Info();
-                        item.Info.Address = Convert.ToString(dt.Rows[0]["Address"]);
-                        item.Info.Phone = Convert.ToString(dt.Rows[0]["Phone"]);
+                        item.Info.Address = Convert.ToString(dt.Rows[i]["Address"]);
+                        item.Info.Phone = Convert.ToString(dt.Rows[i]["Phone"]);
                         list.Add(item);
                     }
 
@@ -541,7 +760,7 @@ namespace TheApp.Models
             {
                 SqlCommand cmd = new SqlCommand("PatientDeleteById", connection);
                 cmd.CommandType = System.Data.CommandType.StoredProcedure;
-                cmd.Parameters.AddWithValue("@PatientId", PatientId);
+                cmd.Parameters.AddWithValue("@Id", PatientId);
 
                 cmd.Parameters.Add("@ErrorMessage", System.Data.SqlDbType.Char, 200);
                 cmd.Parameters["@ErrorMessage"].Direction = System.Data.ParameterDirection.Output;
@@ -629,12 +848,12 @@ namespace TheApp.Models
                     for (int i = 0; i < dt.Rows.Count; i++)
                     {
                         Doctor item = new Doctor();
-                        item.Id = Convert.ToInt32(dt.Rows[0]["Id"]);
-                        item.FirstName = Convert.ToString(dt.Rows[0]["FirstName"]);
-                        item.LastName = Convert.ToString(dt.Rows[0]["LastName"]);
+                        item.Id = Convert.ToInt32(dt.Rows[i]["Id"]);
+                        item.FirstName = Convert.ToString(dt.Rows[i]["FirstName"]);
+                        item.LastName = Convert.ToString(dt.Rows[i]["LastName"]);
                         item.Clinic = new Clinic();
-                        item.Clinic.Hospital = Convert.ToString(dt.Rows[0]["Hospital"]);
-                        item.Clinic.Speciality = Convert.ToString(dt.Rows[0]["Speciality"]);
+                        item.Clinic.Hospital = Convert.ToString(dt.Rows[i]["Hospital"]);
+                        item.Clinic.Speciality = Convert.ToString(dt.Rows[i]["Speciality"]);
                         list.Add(item);
                     }
 
@@ -663,7 +882,7 @@ namespace TheApp.Models
             {
                 SqlCommand cmd = new SqlCommand("DoctorDeleteById", connection);
                 cmd.CommandType = System.Data.CommandType.StoredProcedure;
-                cmd.Parameters.AddWithValue("@DoctorId", DoctorId);
+                cmd.Parameters.AddWithValue("@Id", DoctorId);
 
                 cmd.Parameters.Add("@ErrorMessage", System.Data.SqlDbType.Char, 200);
                 cmd.Parameters["@ErrorMessage"].Direction = System.Data.ParameterDirection.Output;
